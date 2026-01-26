@@ -24,6 +24,42 @@
             margin: 3rem 0;
             border: none;
         }
+        details {
+            margin: 2rem 0;
+        }
+        details summary {
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-left: 4px solid var(--brand-blue);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: var(--brand-blue);
+            list-style: none;
+            transition: all 0.2s ease;
+        }
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        details summary:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+        }
+        details .details-content {
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--brand-purple);
+        }
     </style>
 </head>
 <body class="bg-white antialiased">
@@ -141,7 +177,7 @@
 
         <h2 class="text-3xl font-bold mb-6 pt-8">Hypothesis: Latent Pedagogical Ability</h2>
         <p class="serif">
-            We posit that pretrained LLMs have the capacity to directly generate an automated curriculum that makes hard problems learnable.
+            We hypothesize that pretrained LLMs have the capacity to directly generate an automated curriculum that makes hard problems learnable.
         </p>
         
         <p class="serif">
@@ -166,7 +202,57 @@
         <hr class="section-divider">
 
         <h2 class="text-3xl font-bold mb-6 pt-8">Exploring Self-Generated Curricula with SOAR</h2>
+        <p class="serif">
+            To test this, we introduce SOAR (<strong>S</strong>elf-<strong>O</strong>ptimization with <strong>A</strong>symmetric <strong>R</strong>L). The framework consists of two copies of the same base model: A student \(\pi_{\theta}^S\) and a teacher \(\pi_{\phi}^S\) (at the start, \(\theta = \phi\)).
+        </p>
+        
+        <p class="serif">
+            Let's assume we have a train dataset of hard problems \(\mathcal{D}_{train}\), where training directly on these problems with RL doesn't improve performance. The role of the teacher is to generate synthetic (question, answer) pairs such that 
+            training the student on them improves its performance on the difficult domain. This is a<em>bilevel optimization problem</em>.
+        </p>
+        
+        <details>
+            <summary>Formal Objective</summary>
+            <div class="details-content serif">
+                <p>The objective is to generate a small synthetic dataset \(\mathcal{X} = \{(q_i, a_i)\}_{i=1}^n\) of question-answer pairs such that training \(\pi_{\theta}^S\) on \(\mathcal{X}\) with RL improves performance on the target domain.</p>
+                
+                <div class="my-6">
+                    \[
+                    \begin{align}
+                    \max_{\phi} \quad & \mathbb{E}_{\mathcal{X} \sim \pi^T_{\phi}}
+                    \left[R\left(\pi^S_{\theta'(\mathcal{X})},
+                    \mathcal{D}_{train}\right)
+                    \right] \nonumber \\
+                    \text{subject to} \quad & \theta'(\mathcal{X}) = \text{RL-UPDATE}(\theta, \mathcal{X}), \label{eq:obj} 
+                    \end{align}
+                    \]
+                </div>
+                
+                <p>where RL-UPDATE is the RL training procedure of the student on \(\mathcal{X}\), yielding parameters \(\theta'(\mathcal{X})\), and \(R\) is the updated student's performance on some subset of \(\mathcal{D}_{train}\).</p>
+            </div>
+        </details>
 
+        <p class="serif">
+            We instantiate it as a nested meta-RL loop:
+        </p>
+        
+        <ol class="serif list-decimal list-outside ml-8 space-y-3 mb-6">
+            <li class="pl-2">In the <strong>outer loop</strong>, the teacher generates candidate question-answer pairs that get partitioned into datasets.</li>
+            <li class="pl-2">In the <strong>inner loop</strong>, the student trains with a REINFORCE-style algorithm on the generated datasets for a few steps, and then evaluates on a small sampled subset of \(\mathcal{D}_{train}\) to measure progress on the hard problems.</li>
+            <li class="pl-2">The trained student's <em>change in performance</em>, relative to the initial student, is the reward for the teacher, which then gets an RL update.</li>
+        </ol>
+
+        
+        <figure class="max-w-5xl mx-auto px-4 mb-20">
+            <div class="p-5 md:p-8">
+                <img src="figs/method_for_blog.svg" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                <figcaption class="mt-8 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                    <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                </figcaption>
+            </div>
+        </figure>
+        <h3 class="font-bold">Grounded v. Intrinsic Rewards</h3>
+    
 <!-- 
     <figure class="max-w-5xl mx-auto px-4 mb-20">
         <div class="p-5 md:p-8">
@@ -178,22 +264,15 @@
     </figure>
          -->
 
-    <figure class="max-w-5xl mx-auto px-4 mb-20">
-        <div class="p-5 md:p-8">
-            <img src="figs/method_for_blog.svg" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
-            <figcaption class="mt-8 text-center text-gray-500 serif italic max-w-2xl mx-auto">
-                <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
-            </figcaption>
-        </div>
-    </figure>
+    
         <hr class="section-divider">
         
-        <h2 class="text-3xl font-bold mb-6 pt-8">Results</h2>
-            <h3 class="text-2xl font-bold mb-6 pt-8">Finding #1: Meta-RL finds effective questions </h3>
+        <h2 class="text-3xl font-bold mb-6 pt-8">Findings</h2>
+            <h3 class="text-2xl font-bold mb-6 pt-8">1. Meta-RL finds effective questions </h3>
 
-            <h3 class="text-2xl font-bold mb-6 pt-8">Finding #2: Grounded rewards lead to better teachers </h3>
+            <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers </h3>
 
-            <h3 class="text-2xl font-bold mb-6 pt-8">Finding #3: Question structure over correctness </h3>
+            <h3 class="text-2xl font-bold mb-6 pt-8">3. Question structure over correctness </h3>
 
         <hr class="section-divider">
         
