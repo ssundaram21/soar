@@ -317,7 +317,7 @@
         <p class="serif">
             We do not assume that we can automatically verify how well-posed or correct a synthetic question-answer pair is (as one could do in code). 
             Instead, our <strong>grounded reward</strong> only rewards a question-answer pair if training on it improves student performance on real problems from \(\mathcal{D}_{train}\). 
-             This acts as a black-box grounding signal that tethers the curriculum to real student learning progress, without showing the teacher sample problems or using external curated data.
+             This acts as a <strong>black-box grounding signal</strong> that tethers the curriculum to real student learning progress, without showing the teacher sample problems or using external curated data.
         </p>
         
         <p class="serif">
@@ -356,10 +356,10 @@
         </p>
         
         <p class="serif">
-            The figure below shows the <em>improvement in performance</em> over training on fail@128 questions alone, which we call the Hard-Only baseline. 
+            The plot below shows the <em>improvement in performance</em> over training on fail@128 questions alone, which we call the Hard-Only baseline. 
             For instance, we see \(+9.3\%\) pass@32 on MATH and \(+4.2\%\) on HARP (\(2 \times\) and \(1.5\times\) improvement, respectively).
-            Training with PQ also outperforms questions generated from Intrinsic-T teachers, which tells us that grounded rewards are more effective for discovering the right stepping stones.
-            Our OlympiadBench experiments in the paper also show that PQ questions show some transfer to OOD datasets. 
+            Training with PQ also outperforms questions from Intrinsic-T, which tells us that grounded rewards are more effective for discovering the right questions.
+            Our OlympiadBench experiments in the paper also show that synthetic questions show some transfer to OOD datasets. 
 
         </p> 
 
@@ -374,7 +374,7 @@
 
         <p class="serif">
             This plot shows example learning curves for students trained on fail@128 questions + PQ, fail@128 questions alone, and fail@128 + the full MATH train set (an oracle upper bound). 
-            The Hard-Only baseline is not able to sustain learning, whereas adding PQ questions leads to substantial improvement. 
+            Adding PQ questions improves substantially over Hard-Only, which does not sustain learning. 
         </p>
 
             <figure class="max-w-5xl mx-auto px-4 mb-6">
@@ -401,13 +401,13 @@
 
 
             <p class="serif">
-                Interestingly, though, direct inference on fail@128 test problems with the <em>trained teacher</em> does not show any improvement over the base model.
-                This suggests that generating questions that help generalize to higher levels of difficulty, and actually solving those questions, are separate abilities.  
+                Interestingly, direct inference on fail@128 test problems with the <em>trained teacher</em> does not improve over the base model.
+                This suggests that generating stepping stone questions for hard problems, and actually solving those hard problems, are separate abilities.  
             </p>
             
             <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers </h3>
             <p class="serif">
-                The next set of experiments give us insight into why grounded rewards are needed to train effective teachers. We evaluate this by sampling questions 
+                The next experiments illustrate why grounded rewards are needed to train effective teachers. We evaluate this by sampling questions 
                 <em>from the trained teacher policy</em> (Grounded-T) and training students on these questions + fail@128 questions. 
                 <!-- <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
                     <li class="pl-2"><strong>Grounded rewards sharpen the teacher's distribution of questions while preserving diversity.</strong></li>
@@ -445,8 +445,7 @@
 
             <h3 class="text-2xl font-bold mb-6 pt-8">3. Question structure over correctness </h3>
             <p class="serif">Our last takeaway is that <strong>for models on learning plateaus, diverse, coherent, and conceptually relevant <em> questions </em>are more important than correct <em> answers.</em></strong></p>
-            <p class="serif">Below are examples of PQ questions at different student progress stages. As the student baseline updates, the questions shift from word problems and probability questions
-            to more concise, equation-heavy problems. While the questions are reasonable, the answers are not always correct.</p>
+            <p class="serif">Below are examples of PQ questions at different student progress stages. As the student baseline updates, the style and content of the questions shift. The questions look reasonable, but the answers are not always correct.</p>
             <figure class="max-w-5xl mx-auto px-4 mb-6">
                 <div class="p-3 md:p-5">
                     <img src="figs/qual.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
@@ -455,14 +454,14 @@
                     </figcaption> -->
                 </div>
             </figure>
-            <p class="serif">Using Claude-4.5-Sonnet, we annotate PQ, Grounded-T, Intrinsic-T, and base model questions for correctness. All of the trained teachers have substantially
+            <p class="serif">We annotate sampled synthetic questions for correctness, and find that all of the trained teachers have
                 higher correctness and well-posedness rates than the base model. However, while \(63\%\) of PQ questions
                 are classified as mathematically plausible and well-posed, only \(33\%\) of the problems have correct answers. Intrinsic-T
             has a higher correctness rate \(55\%\), yet leads to worse student performance -- likely because of diversity collapse. </p>
             
         <hr class="section-divider">
         
-        <!-- <h2 class="text-3xl font-bold mb-6 pt-8">Implications and Limitations</h2> -->
+        <h2 class="text-3xl font-bold mb-6 pt-8">Implications and Limitations</h2>
 
 
         <!-- <p class="serif">
