@@ -319,7 +319,14 @@
         </p>
         
         <p class="serif">
-            We train SOAR on MATH and HARP, keeping OlympiadBench as an OOD dataset. Our experiments led to three key findings.
+            We train SOAR on MATH and HARP, keeping OlympiadBench as an OOD dataset. There are two main "outputs" of the meta-RL loop for us to analyze:
+
+            <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
+                <li class="pl-2"><strong>PQ questions:</strong> Teacher-generated questions were used to promote the baseline student.</li>
+                <li class="pl-2"><strong> Promoted Student</strong>: The updated student at the end of the meta-RL loop.</li>
+            </ul>
+            <p class="serif">Another interesting byproduct is the <strong>trained teacher policy</strong>.</p>
+            <p class="serif">Our experiments led to three key findings.</p>
         </p>
 
         <h3 class="text-2xl font-bold mb-6 pt-8">1. Meta-RL finds effective questions</h3>
