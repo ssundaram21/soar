@@ -17,7 +17,8 @@
             background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .prose p { margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.15rem; }
+        .prose p { margin-bottom: 0.75rem; line-height: 1.5; font-size: 1.15rem; }
+        p.serif { margin-bottom: 0.75rem; line-height: 1.5; }
         .section-divider {
             height: 1px;
             background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3), transparent);
@@ -77,13 +78,13 @@
     </nav> -->
 
     <header class="max-w-5xl mx-auto px-6 pt-10 pb-16 text-center">
-        <div class="flex items-center gap-3 text-sm font-semibold text-blue-600 mb-6 uppercase tracking-wider">
+        <div class="flex items-center justify-center gap-3 text-sm font-semibold text-blue-600 mb-6 uppercase tracking-wider">
             <!-- <span>Research Blog</span>
             <span>•</span> -->
             <span>January 25, 2026</span>
         </div>
         
-        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-8 leading-tight text-left">
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-8 leading-tight text-center">
             Teaching Models to Teach Themselves:<br> 
             Reasoning at the Edge of Learnability
         </h1>
@@ -91,11 +92,11 @@
             Can a model learn to escape its own learning plateau by generating its own "stepping stone" curriculum?
         </p> -->
 
-        <div class="flex items-center gap-4 py-6 border-y border-gray-100">
+        <div class="flex items-center justify-center gap-4 py-6 border-y border-gray-100">
             <!-- <div class="w-14 h-14 bg-gray-200 rounded-full overflow-hidden shrink-0">
                 <img src="your-photo.jpg" alt="Shobhita" class="w-full h-full object-cover">
             </div> -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4 text-left">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4 text-center">
                 <div>
                     <p class="font-bold text-lg">Shobhita Sundaram</p>
                     <p class="text-gray-500">MIT</p>
@@ -121,8 +122,6 @@
                     <p class="text-gray-500">Meta FAIR, NYU</p>
                 </div>
             </div>
-            <div class="ml-auto flex gap-2">
-                </div>
         </div>
     </header>
 
@@ -145,8 +144,8 @@
         </div>
     </aside>
 
-    <figure class="max-w-5xl mx-auto px-4 mb-20">
-        <div class="p-5 md:p-8">
+    <figure class="max-w-5xl mx-auto px-4 mb-6">
+        <div class="p-3 md:p-5">
             <img src="figs/teaser_for_blog_full.svg" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
             <figcaption class="mt-8 text-center text-gray-500 serif italic max-w-2xl mx-auto">
                 <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
@@ -157,41 +156,57 @@
     <article class="max-w-4xl mx-auto px-6 prose mb-20 text-lg">
         <h2 class="text-3xl font-bold mb-6">The Sparse Reward Plateau</h2>
         <p class="serif">
-            Reinforcement learning (RL) for LLMs has been extremely effective for enhancing reasoning, particularly for verifiable problems, but it has an important limitation: <em>models cannot learn from tasks that they cannot already solve to some extent</em>. 
-            RL relies on reinforcing correct outputs; if the model doesn't get correct answers on a given dataset with some frequency, then it gets zero reward, 
-            zero gradient signal and <strong>the learning curve plateaus</strong>.
+            Reinforcement learning (RL) for LLMs has been extremely effective for enhancing reasoning, especially for mathematics and coding 
+            (verifiable problems), but it has an important limitation: <em>models cannot learn from tasks that they cannot already solve to some extent</em>. 
+            RL relies on reinforcing correct outputs; if the model does not produce correct answers on a given dataset with some frequency, then the rewards that 
+            it receives are too sparse to produce the needed gradient signal, and the learning curve plateaus.
         </p>
         
         <p class="serif">
-            We already know that curriculum learning (training on the most learnable tasks first)
-            helps models generalize to levels of difficulty that they cannot initially reach. Curriculum learning in RL 
-            is well studied but 
-            largely relies on already having human-curated, annotated data to draw upon.
+            We already know that curriculum learning (training on easy tasks first before progressing to harder ones) helps models generalize to levels of difficulty that 
+            they cannot initially, directly reach. Curriculum learning in RL is well studied but largely relies on already having human-curated, annotated data to draw upon.
         </p>
         
         <p class="serif">
-            In our new paper, we ask instead if <strong>models can generate a stepping stone curriculum to break their own reasoning plateau.</strong>
+            In our new paper, we ask instead if <strong>models themselves can generate a stepping stone curriculum to break their own reasoning plateau.</strong>
         </p>
 
-        <hr class="section-divider">
 
-        <h2 class="text-3xl font-bold mb-6 pt-8">Hypothesis: Latent Pedagogical Ability</h2>
+        <h3 class="text-2xl font-bold mb-6 pt-8">Hypothesis: Latent Pedagogical Ability</h3>
         <p class="serif">
             We hypothesize that pretrained LLMs have the capacity to directly generate an automated curriculum that makes hard problems learnable.
         </p>
         
         <p class="serif">
-            <strong>Intuition:</strong> Even if a model is trapped in a sparse-reward basin, pretrained LLMs have encountered massive amounts of easy and intermediate problems already. Consider solving a difficult calculus problem. Even if a model cannot directly generate an answer, it likely <em>is</em> capable of producing simple chain rule exercises. In turn, these chain-rule exercises can act as stepping stones:
+            <strong>Intuition:</strong> Even if a model is trapped in a sparse-reward basin, pretrained LLMs have encountered huge amounts of easy and intermediate problems 
+            already. Consider solving a difficult calculus problem. Even if a model does not directly generate the correct answer with repeated sampling, it likely <em>is</em> 
+            capable of producing simple chain rule exercises. In turn, these chain-rule exercises can act as stepping stones:
         </p>
         
         <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
-            <li><strong>Gradient Signal:</strong> Training on these simpler exercises reinforces useful and relevant reasoning traces.</li>
-            <li><strong>Learnability Frontier:</strong> Solving subtasks and receiving non-zero rewards pushes the student policy out of the plateau and into a region where the original, harder problem becomes more learnable.</li>
+            <li class="pl-2"><strong>Gradient Signal:</strong> Training on these simpler exercises reinforces useful and relevant reasoning traces.</li>
+            <li class="pl-2"><strong>Learnability Frontier:</strong> Solving subtasks and receiving non-zero rewards pushes the student policy out of the plateau and 
+                into a region where the original, harder problem becomes more learnable. In this sense, easier problems are a way of "digging out" model capabilities that 
+                are inaccessible from direct sampling/training.</li>
         </ul>
+
+        <figure class="max-w-5xl mx-auto px-4 mb-6">
+            <div class="p-3 md:p-5">
+                <img src="figs/Asset 1.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                    <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                </figcaption>
+            </div>
+        </figure>
         
         <p class="serif">
-            The key question: Is this latent knowledge <em>present</em>, and is it <em>extractable</em> without human intervention?
+            The key questions:
         </p>
+        
+        <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
+            <li class="pl-2">Is this latent knowledge <em>present</em>, and is it <em>extractable</em> without human intervention?</li>
+            <li class="pl-2">Can we achieve this in domains with sparse, binary rewards that do not have automated ways of verifying question-answer pairs?</li>
+        </ul>
 
         <!-- <div class="my-12 p-8 bg-gray-900 text-gray-100 rounded-2xl font-mono text-sm leading-relaxed overflow-x-auto">
             <p class="text-blue-400 mb-4 tracking-widest uppercase font-bold text-xs">// SOAR BI-LEVEL OBJECTIVE</p>
@@ -203,18 +218,25 @@
 
         <h2 class="text-3xl font-bold mb-6 pt-8">Exploring Self-Generated Curricula with SOAR</h2>
         <p class="serif">
-            To test this, we introduce SOAR (<strong>S</strong>elf-<strong>O</strong>ptimization with <strong>A</strong>symmetric <strong>R</strong>L). The framework consists of two copies of the same base model: A student \(\pi_{\theta}^S\) and a teacher \(\pi_{\phi}^S\) (at the start, \(\theta = \phi\)).
+            To explore if we can surface these pedagogical signals, we design a meta-RL framework: SOAR (<strong>S</strong>elf-<strong>O</strong>ptimization with <strong>A</strong>symmetric <strong>R</strong>L).
         </p>
         
         <p class="serif">
-            Let's assume we have a train dataset of hard problems \(\mathcal{D}_{train}\), where training directly on these problems with RL doesn't improve performance. The role of the teacher is to generate synthetic (question, answer) pairs such that 
-            training the student on them improves its performance on the difficult domain. This is a <em>bilevel optimization problem</em>.
+            The framework consists of two copies of the same base model: A student \(\pi_{\theta}^S\) and a teacher \(\pi_{\phi}^T\) (at the start, \(\theta = \phi\)).
         </p>
+        
+        <p class="serif">
+            Let's assume we have a train dataset of hard problems \(\mathcal{D}_{train}\), where training directly on these problems with RL does not improve test performance. 
+            The role of the teacher is to generate synthetic (question, answer) pairs such that training the student on them improves its performance on the difficult domain. 
+            This forms a <em>bilevel optimization problem</em>.
+        </p>
+               
         
         <details>
             <summary>Formal Objective</summary>
             <div class="details-content serif">
-                <p class="serif">The objective is to generate a small synthetic dataset \(\mathcal{X} = \{(q_i, a_i)\}_{i=1}^n\) of question-answer pairs such that training \(\pi_{\theta}^S\) on \(\mathcal{X}\) with RL improves performance on the target domain.</p>
+                <p class="serif">The objective is to generate a small synthetic dataset \(\mathcal{X} = \{(q_i, a_i)\}_{i=1}^n\) of question-answer pairs such that 
+                    training \(\pi_{\theta}^S\) on \(\mathcal{X}\) with RL improves performance on the target domain.</p>
                 
                 <div class="my-6">
                     \[
@@ -228,7 +250,8 @@
                     \]
                 </div>
                 
-                <p class="serif">where RL-UPDATE is the RL training procedure of the student on \(\mathcal{X}\), yielding parameters \(\theta'(\mathcal{X})\), and \(R\) is the updated student's performance on some subset of \(\mathcal{D}_{train}\).</p>
+                <p class="serif">where RL-UPDATE is the RL training procedure of the student on \(\mathcal{X}\), yielding parameters \(\theta'(\mathcal{X})\), 
+                    and \(R\) is the updated student's performance on some subset of \(\mathcal{D}_{train}\).</p>
             </div>
         </details>
 
@@ -237,47 +260,131 @@
         </p>
         
         <ol class="serif list-decimal list-outside ml-8 space-y-3 mb-6">
-            <li class="pl-2">In the <strong>outer loop</strong>, the teacher generates candidate question-answer pairs that get partitioned into datasets.</li>
-            <li class="pl-2">In the <strong>inner loop</strong>, the student trains with a REINFORCE-style algorithm on the generated datasets for a few steps, and then evaluates on a small sampled subset of \(\mathcal{D}_{train}\) to measure progress on the hard problems.</li>
+            <li class="pl-2">In the <strong>outer loop</strong>, the teacher generates candidate question-answer pairs that are partitioned into datasets.</li>
+            <li class="pl-2">In the <strong>inner loop</strong>, the student trains with a REINFORCE-style algorithm on the generated datasets for a 
+                few steps, and then evaluates on a small sampled subset of \(\mathcal{D}_{train}\) to measure progress on the hard problems.</li>
             <li class="pl-2">The trained student's <em>change in performance</em>, relative to the initial student, is the reward for the teacher, which then gets an RL update.</li>
         </ol>
 
+
         
-        <figure class="max-w-5xl mx-auto px-4 mb-20">
-            <div class="p-5 md:p-8">
+        <figure class="max-w-5xl mx-auto px-4 mb-6">
+            <div class="p-3 md:p-5">
                 <img src="figs/method_for_blog.svg" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
-                <figcaption class="mt-8 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
                     <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
                 </figcaption>
             </div>
         </figure>
         
-        
-        <h2 class="text-3xl font-bold mb-6">Grounded v. Intrinsic Rewards</h2>
         <p class="serif">
-            Quick emphasis on grounded rewards, then move onto summarizing results.
+            To create a moving target for the teacher, and accumulate student progress, whenever the teacher's average reward exceeds a fixed threshold over 
+            several timesteps, we <em>update the initial student baseline</em> to be a trained student on the best generated dataset at the current timestep. 
+            We also keep track of those synthetic questions that led to this update, which we call Promotion Questions (PQ).
         </p>
 
+        <h3 class="text-2xl font-bold mb-6 pt-8">Grounded v. Intrinsic Rewards</h3>
+        <p class="serif">
+            An important aspect of our setting is that we do not assume that we can automatically verify how
+             well-posed or correct a synthetic question-answer pair is (as one could do in code). Instead, we use a <strong>grounded reward</strong>, 
+             where we only reward a question-answer pair if training on it improves the student's performance on real problems from \(\mathcal{D}_{train}\). 
+             This acts as a black-box grounding signal that tethers the curriculum to real student learning progress, without actually showing the teacher sample problems or using any extra curated data.
+        </p>
         
-    
-<!-- 
-    <figure class="max-w-5xl mx-auto px-4 mb-20">
-        <div class="p-5 md:p-8">
-            <img src="figs/bilevel_for_blog.svg" alt="SOAR Framework and Performance Lift" class="w-1/2 mx-auto h-auto rounded-lg">
-            <figcaption class="mt-8 text-center text-gray-500 serif italic max-w-2xl mx-auto">
-                <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
-            </figcaption>
-        </div>
-    </figure>
-         -->
-
-    
+        <p class="serif">
+            Another option is "data-free" <strong>intrinsic rewards</strong>, used by many self-play works that have similar asymmetric setups. One example is <em>learnability</em>, which rewards teacher models for generating problems that are not too difficult or too hard for the student (pass rate \(\approx 50 \%\)). However, since these rewards are essentially proxies for the target that we actually care about (student learning progress) they often risk diversity collapse, reward hacking, and drift to degenerate outputs. As a comparison point to grounded rewards used in SOAR, we also train teacher models with this intrinsic learnability reward (Intrinsic-T).
+        </p>
+        
         <hr class="section-divider">
         
         <h2 class="text-3xl font-bold mb-6 pt-8">Findings</h2>
-            <h3 class="text-2xl font-bold mb-6 pt-8">1. Meta-RL finds effective questions </h3>
+        <p class="serif">
+            Our experiments use Llama-3.2-3B-Instruct. We extract difficult subsets of math reasoning datasets (MATH, HARP, and OlympiadBench) by filtering them 
+            for problems where the model achieved 0 successes in 128 attempts. We call these subsets "fail@128" datasets. 
+            These fit the criteria of (1) having sparse and binary rewards, and (2) lacking a way to automatically verify question-answer pairs.
+        </p>
+        
+        <p class="serif">
+            We train SOAR on MATH and HARP, keeping OlympiadBench as an OOD dataset. Our experiments led to three key findings.
+        </p>
 
+        <h3 class="text-2xl font-bold mb-6 pt-8">1. Meta-RL finds effective questions</h3>
+        
+        <p class="serif">
+            Our first set of experiments show that <strong>a model's pedagogical ability can be decoupled from its task-solving ability</strong>, and that <strong>grounded rewards surface questions that improve over reasoning plateaus.</strong>
+            <!-- that training students on fail@128 questions <em>with</em> questions accumulated from SOAR (PQ) unlocks improvement. -->
+        </p>
+        
+        <p class="serif">
+            The figure below shows the <em>improvement in performance</em> over training on fail@128 questions alone, which we call the Hard-Only baseline. 
+            For instance, we see \(+9.3\%\) pass@32 on MATH and \(+4.2\%\) on HARP (\(2 \times\) and \(1.5\times\) improvement, respectively).
+            Training with PQ also outperforms questions generated from Intrinsic-T teachers, which tells us that grounded rewards are more effective for discovering the right stepping stones.
+            Our OlympiadBench experiments in the paper also show that PQ questions show some transfer to OOD datasets. 
+
+        </p> 
+
+            <figure class="max-w-5xl mx-auto px-4 mb-6">
+                <div class="p-3 md:p-5">
+                    <img src="figs/promotion_results_delta.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                    <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                        <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                    </figcaption>
+                </div>
+            </figure>
+
+        <p class="serif">
+            This plot shows example learning curves for students trained on fail@128 questions + PQ, fail@128 questions alone, and fail@128 + the full MATH train set (an oracle upper bound). 
+            The Hard-Only baseline is not able to sustain learning, whereas adding PQ questions leads to substantial improvement. 
+        </p>
+
+            <figure class="max-w-5xl mx-auto px-4 mb-6">
+                <div class="p-3 md:p-5">
+                    <img src="figs/pass32_for_blog.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                    <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                        <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                    </figcaption>
+                </div>
+            </figure>
+            <details>
+                <summary>Why does the base model start with pass@32 above zero?</summary>
+                <div class="details-content serif">
+                    <p class="serif">Looking at the plot above, one might ask: If we filtered the datasets for problems with a 0/128 success rate, why is the initial pass@32 roughly 8%?</p>
+
+                    <p class="serif">We use different seeds for evaluation and the initial filtering, 
+                        which means there is still some probability of the model producing a correct answer. If we model the success rate using a prior \(p \sim \text{Beta}(1,1)\), 
+                        observing 0/128 successes gives a posterior of \(p \sim \text{Beta}(1,129)\) -- under which an \(8\%\) pass@32 is quite likely (\(\approx 72\%\)). </p>
+                </div>
+            </details>
+            </div>
+
+
+            <p class="serif">
+                Interestingly, though, direct inference on fail@128 test problems with the <em>trained teacher</em> does not show any improvement over the base model.
+                This suggests that generating questions that help generalize to higher levels of difficulty, and actually solving those questions, are separate abilities.  
+            </p>
+            
             <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers </h3>
+            <p class="serif">
+                The next set of experiments give us insight into why grounded rewards are needed to train effective teachers. We evaluate this by sampling questions 
+                <em>from the trained teacher policy</em> (Grounded-T) and training students on these questions + fail@128 questions. 
+                <!-- <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
+                    <li class="pl-2"><strong>Grounded rewards sharpen the teacher's distribution of questions while preserving diversity.</strong></li>
+                    <li class="pl-2"><strong>Intrinsic rewards are prone to instability and diversity collapse.</strong></li>
+                </ul> -->
+                
+                <p class="serif">First, <strong>grounded rewards sharpen the teacher's distribution of questions.</strong> 
+                Training students on questions generated from the base model leads to noisy outcomes, but the existence of successful runs tells us that useful questions are latent in the base model.
+                Grounded-T questions more reliably give a useful gradient signal..</p>
+                <figure class="max-w-5xl mx-auto px-4 mb-6">
+                    <div class="p-3 md:p-5">
+                        <img src="figs/random_teacher.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                        <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                            <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                        </figcaption>
+                    </div>
+                </figure>
+
+            </p>
 
             <h3 class="text-2xl font-bold mb-6 pt-8">3. Question structure over correctness </h3>
 
