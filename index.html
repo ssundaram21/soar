@@ -386,8 +386,21 @@
                         </figcaption> -->
                     </div>
                 </figure>
-
-
+                
+                <p class="serif">Second, <strong>grounded teachers avoid instability and diversity collapse failure modes of instrinsic rewards.</strong> 
+                    If we sample questions from different Grounded-T and Intrinsic-T teacher seeds, and train students with them, we see that Grounded-T students from different teachers have similar learning curves.
+                    Different Intrinsic-T teacher seeds, however, lead to different curves, and can even lead to student collapse.
+                </p>
+                <figure class="max-w-5xl mx-auto px-4 mb-6">
+                    <div class="p-3 md:p-5">
+                        <img src="figs/grounded_v_intrinsic.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
+                        <!-- <figcaption class="mt-4 text-center text-gray-500 serif italic max-w-2xl mx-auto">
+                            <strong>Figure 1:</strong> SOAR uses a grounded bi-level Meta-RL loop to break out of the performance plateaus that stall direct training.
+                        </figcaption> -->
+                    </div>
+                </figure>
+                <p class="serif">We also find that <em>Grounded-T teachers retain the diversity of the base model</em> whereas 
+                    <em>Intrinsic-T teachers lose \(\approx 70\%\) of the base model's diversity.</em></p>
 
             </p>
 
