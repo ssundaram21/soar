@@ -409,7 +409,7 @@
             <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers than intrinsic learnability rewards. </h3>
             <p class="serif">
                 The next experiments illustrate why grounded rewards are needed to train effective teachers. We evaluate this by sampling questions 
-                <em>from the trained teacher policy</em> (Grounded-T) and training students on these questions + fail@128 questions. 
+                <em>from the trained teacher policy</em> (grounded-trained) and training students on these questions + fail@128 questions. 
                 <!-- <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
                     <li class="pl-2"><strong>Grounded rewards sharpen the teacher's distribution of questions while preserving diversity.</strong></li>
                     <li class="pl-2"><strong>Intrinsic rewards are prone to instability and diversity collapse.</strong></li>
@@ -417,7 +417,7 @@
                 
                 <p class="serif">First, <strong>grounded rewards sharpen the teacher's distribution of questions.</strong> 
                 Training students on questions generated from the base model leads to noisy outcomes, but the existence of successful runs tells us that useful questions are latent in the base model.
-                Grounded-T questions, on the other hand, more reliably give a useful gradient signal.</p>
+                <em>grounded-trained</em> teacher questions, on the other hand, more reliably give a useful gradient signal.</p>
                 <figure class="max-w-5xl mx-auto px-4 mb-6">
                     <div class="p-3 md:p-5">
                         <img src="figs/random_teacher.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
@@ -428,7 +428,7 @@
                 </figure>
                 
                 <p class="serif">Second, <strong>grounded teachers avoid instability and diversity collapse failure modes of instrinsic rewards.</strong> 
-                    If we sample questions from different Grounded-T and <em>intrinsic-trained</em> teacher seeds, and train students with them, we see that Grounded-T students from different teachers have similar learning curves.
+                    If we sample questions from different <em>grounded-trained</em> and <em>intrinsic-trained</em> teacher seeds, and train students with them, we see that <em>grounded-trained</em> students from different teachers have similar learning curves.
                     Different <em>intrinsic-trained</em> teacher seeds, however, lead to different curves, and can even lead to student collapse.
                 </p>
                 <figure class="max-w-5xl mx-auto px-4 mb-6">
@@ -439,8 +439,8 @@
                         </figcaption> -->
                     </div>
                 </figure>
-                <p class="serif">We also find that <em>Grounded-T teachers retain the diversity of the base model</em> whereas 
-                    <em>Intrinsic-trained teachers lose \(\approx 70\%\) of the base model's diversity.</em></p>
+                <p class="serif">We also find that <em>grounded-trained teachers retain the diversity of the base model</em> whereas 
+                    <em>intrinsic-trained teachers lose \(\approx 70\%\) of the base model's diversity.</em></p>
 
             </p>
 
@@ -458,7 +458,7 @@
             <p class="serif">We annotate sampled synthetic questions for correctness, and find that all of the trained teachers have
                 higher correctness and well-posedness rates than the base model. However, while \(63\%\) of promotion questions
                 are classified as mathematically plausible and well-posed, only \(33\%\) of the problems have correct answers. <em>Intrinsic-trained</em> teachers
-            has a higher correctness rate \(55\%\), yet leads to worse student performance -- likely because of diversity collapse. </p>
+            have a higher correctness rate \(55\%\), yet lead to worse student performance -- likely because of diversity collapse. </p>
             
         <hr class="section-divider">
         
