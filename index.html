@@ -374,6 +374,8 @@
                     <p class="serif">We use different seeds for evaluation and the initial filtering, 
                         which means there is still some probability of the model producing a correct answer. If we model the success rate using a prior \(p \sim \text{Beta}(1,1)\), 
                         observing 0/128 successes gives a posterior of \(p \sim \text{Beta}(1,129)\) -- under which an \(8\%\) pass@32 is quite likely (\(\approx 72\%\)). </p>
+
+                    <p class="serif">Nonetheless, direct RL training on these fail@128 questions does not sustain learning, and learning plateaus quickly.</p>
                 </div>
             </details>
             </div>
