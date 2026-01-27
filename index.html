@@ -311,7 +311,7 @@
         
         <p class="serif">
             To create a moving target for the teacher, and accumulate student progress, whenever the teacher's average reward exceeds a fixed threshold over several timesteps, we <em>update the initial student baseline</em> to be a trained student on the best generated dataset at the current timestep (we call this the <strong>promotion mechanism</strong>). 
-            We also keep track of the synthetic questions that led to this update, which we call Promotion Questions (PQ).
+            We also keep track of the synthetic questions that led to this update, which we call <em>promotion questions</em>.
         </p>
 
         <h3 class="text-2xl font-bold mb-6 pt-8">Grounded v. Intrinsic Rewards</h3>
@@ -322,7 +322,7 @@
         </p>
         
         <p class="serif">
-            As a comparison point to grounded rewards, we also train teacher models with an <strong>intrinsic reward</strong> (Intrinsic-T), in particular the <em>learnability</em> reward, 
+            As a comparison point to grounded rewards, we also train teacher models with an <strong>intrinsic reward</strong>, in particular the <em>learnability</em> reward, 
             used by many self-play works with similar asymmetric setups. 
             Learnability rewards teacher models for generating problems with a student pass rate of \(\approx 50 \%\). 
             Past work has shown that since intrinsic rewards are proxies for the target that we actually care about (student learning progress), they can risk reward hacking and drift to degenerate outputs. 
@@ -342,7 +342,7 @@
             We train SOAR on MATH and HARP, keeping OlympiadBench as an OOD dataset. There are two main "outputs" of the meta-RL loop for us to analyze:
 
             <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
-                <li class="pl-2"><strong>PQ questions:</strong> Teacher-generated questions were used to promote the baseline student.</li>
+                <li class="pl-2"><strong>Promotion questions:</strong> Teacher-generated questions were used to promote the baseline student.</li>
                 <li class="pl-2"><strong> Promoted Student</strong>: The updated student at the end of the meta-RL loop.</li>
             </ul>
             <p class="serif">Another interesting byproduct is the <strong>trained teacher policy</strong>.</p>
@@ -359,7 +359,7 @@
         <p class="serif">
             The plot below shows the <em>improvement in performance</em> over training on fail@128 questions alone, which we call the Hard-Only baseline. 
             For instance, we see \(+9.3\%\) pass@32 on MATH and \(+4.2\%\) on HARP (\(2 \times\) and \(1.5\times\) improvement, respectively).
-            Training with PQ also outperforms questions from Intrinsic-T, which tells us that grounded rewards are more effective for discovering the right questions.
+            Training with promotion questions also outperforms questions from <em>intrinsic-trained</em> teachers, which tells us that grounded rewards are more effective for discovering the right questions.
             Our OlympiadBench experiments in the paper also show that synthetic questions show some transfer to OOD datasets. 
 
         </p> 
@@ -374,8 +374,8 @@
             </figure>
 
         <p class="serif">
-            This plot shows example learning curves for students trained on fail@128 questions + PQ, fail@128 questions alone, and fail@128 + the full MATH train set (an oracle upper bound). 
-            Adding PQ questions improves substantially over Hard-Only, which does not sustain learning. 
+            This plot shows example learning curves for students trained on fail@128 questions + promotion questions, fail@128 questions alone, and fail@128 + the full MATH train set (an oracle upper bound). 
+            Adding promotion questions questions improves substantially over Hard-Only, which does not sustain learning. 
         </p>
 
             <figure class="max-w-5xl mx-auto px-4 mb-6">
@@ -406,7 +406,7 @@
                 This suggests that generating stepping stone questions for hard problems, and actually solving those hard problems, are separate abilities.  
             </p>
             
-            <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers </h3>
+            <h3 class="text-2xl font-bold mb-6 pt-8">2. Grounded rewards lead to better teachers than intrinsic learnability rewards. </h3>
             <p class="serif">
                 The next experiments illustrate why grounded rewards are needed to train effective teachers. We evaluate this by sampling questions 
                 <em>from the trained teacher policy</em> (Grounded-T) and training students on these questions + fail@128 questions. 
@@ -428,8 +428,8 @@
                 </figure>
                 
                 <p class="serif">Second, <strong>grounded teachers avoid instability and diversity collapse failure modes of instrinsic rewards.</strong> 
-                    If we sample questions from different Grounded-T and Intrinsic-T teacher seeds, and train students with them, we see that Grounded-T students from different teachers have similar learning curves.
-                    Different Intrinsic-T teacher seeds, however, lead to different curves, and can even lead to student collapse.
+                    If we sample questions from different Grounded-T and <em>intrinsic-trained</em> teacher seeds, and train students with them, we see that Grounded-T students from different teachers have similar learning curves.
+                    Different <em>intrinsic-trained</em> teacher seeds, however, lead to different curves, and can even lead to student collapse.
                 </p>
                 <figure class="max-w-5xl mx-auto px-4 mb-6">
                     <div class="p-3 md:p-5">
@@ -440,13 +440,13 @@
                     </div>
                 </figure>
                 <p class="serif">We also find that <em>Grounded-T teachers retain the diversity of the base model</em> whereas 
-                    <em>Intrinsic-T teachers lose \(\approx 70\%\) of the base model's diversity.</em></p>
+                    <em>Intrinsic-trained teachers lose \(\approx 70\%\) of the base model's diversity.</em></p>
 
             </p>
 
             <h3 class="text-2xl font-bold mb-6 pt-8">3. Question structure over correctness </h3>
             <p class="serif">Our last takeaway is that <strong>for models on learning plateaus, diverse, coherent, and conceptually relevant <em> questions </em>are more important than correct <em> answers.</em></strong></p>
-            <p class="serif">Below are examples of PQ questions at different student progress stages. As the student baseline updates, the style and content of the questions shift. The questions look reasonable, but the answers are not always correct.</p>
+            <p class="serif">Below are examples of promotion questions at different student progress stages. As the student baseline updates, the style and content of the questions shift. The questions look reasonable, but the answers are not always correct.</p>
             <figure class="max-w-5xl mx-auto px-4 mb-6">
                 <div class="p-3 md:p-5">
                     <img src="figs/qual.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
@@ -456,8 +456,8 @@
                 </div>
             </figure>
             <p class="serif">We annotate sampled synthetic questions for correctness, and find that all of the trained teachers have
-                higher correctness and well-posedness rates than the base model. However, while \(63\%\) of PQ questions
-                are classified as mathematically plausible and well-posed, only \(33\%\) of the problems have correct answers. Intrinsic-T
+                higher correctness and well-posedness rates than the base model. However, while \(63\%\) of promotion questions
+                are classified as mathematically plausible and well-posed, only \(33\%\) of the problems have correct answers. <em>Intrinsic-trained</p>em>
             has a higher correctness rate \(55\%\), yet leads to worse student performance -- likely because of diversity collapse. </p>
             
         <hr class="section-divider">
