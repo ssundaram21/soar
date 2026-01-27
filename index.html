@@ -462,7 +462,7 @@
         <hr class="section-divider">
         
         <h2 class="text-3xl font-bold mb-6 pt-8">Implications and Limitations</h2>
-        <p class="serif">Our paper shows that meta-RL with grounded rewards can kickstart RL finetuning when the initial success rate is too low to get useful gradient signal. Alongside our conceptual takeaways, these results tie to the broader question of whether RL fine-tuning truly expands a model's learning frontier or merely sharpens the existing distribution. Our work can be seen as a way to reach latent knowledge that exists in the pretrained model's distribution, but is inaccessible with normal methods, by exploiting a more easily-accessible ability to generate intermediate questions.</p>
+        <p class="serif">Our paper shows that meta-RL with grounded rewards can kickstart RL finetuning when the initial success rate is too low to get useful gradient signal. Alongside our conceptual takeaways, these results tie to the broader question of whether RL fine-tuning truly expands a model's learning frontier or merely sharpens the existing distribution. <em>Our work can be seen as a way to reach latent knowledge that exists in the pretrained model's distribution, but is inaccessible with normal methods, by sharpening a more easily-accessible ability to generate intermediate questions.</em></p>
         
         <p class="serif">
             The main limitation is computational cost; bilevel RL loops are expensive. We show in the paper that allocating extra compute to direct training on hard problems (via a larger group size) does not recover the improvements from meta-RL. Nonetheless, while our work provides a proof of concept for the value of grounded rewards in this setting, there is still significant headroom for future improvement in efficiency and scaling to larger models.
@@ -491,18 +491,17 @@
     <hr class="section-divider">
 
     <section class="max-w-4xl mx-auto px-6 mb-20">
-        <div class="text-left bg-white p-10 rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-12">
+        <div class="text-left bg-white p-10 rounded-2xl border border-gray-200 shadow-sm mb-12">
             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Cite this work</p>
-            <pre class="text-base text-gray-600 leading-relaxed font-mono">@misc{sundaram2026teachingmodelsteachthemselves,
-                title={Teaching Models to Teach Themselves: Reasoning at the Edge of Learnability}, 
-                author={Shobhita Sundaram and John Quan and Ariel Kwiatkowski and Kartik Ahuja and Yann Ollivier and Julia Kempe},
-                year={2026},
-                eprint={2601.18778},
-                archivePrefix={arXiv},
-                primaryClass={cs.LG},
-                url={https://arxiv.org/abs/2601.18778}, 
-          }
-        </pre>
+            <pre class="text-base text-gray-600 leading-relaxed font-mono whitespace-pre-wrap break-words overflow-x-auto">@misc{sundaram2026teachingmodelsteachthemselves,
+    title={Teaching Models to Teach Themselves: Reasoning at the Edge of Learnability}, 
+    author={Shobhita Sundaram and John Quan and Ariel Kwiatkowski and Kartik Ahuja and Yann Ollivier and Julia Kempe},
+    year={2026},
+    eprint={2601.18778},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG},
+    url={https://arxiv.org/abs/2601.18778}
+}</pre>
         </div>
         
         <!-- <h2 id="references" class="text-3xl font-bold mb-6">References</h2>
