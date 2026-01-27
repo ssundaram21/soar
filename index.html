@@ -188,7 +188,7 @@
         <h2 class="text-3xl font-bold mb-6">The Sparse Reward Plateau</h2>
         <p class="serif">
             RL for LLMs has been extremely effective for enhancing reasoning on verifiable problems, but it has an important limitation: 
-            <em>models cannot learn from tasks that they cannot already solve</em>. 
+            <em>models cannot learn from tasks that they cannot already solve to some extent</em>. 
             RL relies on reinforcing correct outputs: if the model does not produce correct answers on a given dataset with some frequency, then the rewards that 
             it receives are too sparse to produce the needed gradient signal, and the learning curve plateaus.
         </p>
@@ -199,13 +199,14 @@
         </p>
         
         <p class="serif">
-            In our new paper, we ask instead if <strong>models themselves can generate a stepping stone curriculum to break their own reasoning plateau.</strong>
+            In our new paper, we ask instead if <strong>models themselves can generate a stepping stone curriculum to break their own reasoning 
+                plateau.</strong> We show that using meta-RL, models can self-improve and get "unstuck" even on problems with zero empirical pass@128.
         </p>
 
 
         <h3 class="text-2xl font-bold mb-6 pt-8">Hypothesis: Latent Pedagogical Ability</h3>
         <p class="serif">
-            We hypothesize that pretrained LLMs have the capacity to directly generate an automated curriculum that makes hard problems learnable.
+            We hypothesize that pretrained LLMs can be finetuned to directly generate an automated curriculum that makes hard problems learnable.
         </p>
         
         <p class="serif">
@@ -258,7 +259,7 @@
         
         <p class="serif">
             Let's assume we have a train dataset of hard problems \(\mathcal{D}_{train}\), where training directly on these problems with RL does not improve test performance. 
-            The role of the teacher is to generate synthetic (question, answer) pairs such that training the student on them improves its performance on the difficult domain. 
+            <strong>The role of the teacher is to generate synthetic (question, answer) pairs such that training the student on them improves its performance on the difficult domain.</strong>
             This forms a <em>bilevel optimization problem</em>.
         </p>
                
