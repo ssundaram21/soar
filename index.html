@@ -156,15 +156,15 @@
     <article class="max-w-4xl mx-auto px-6 prose mb-20 text-lg">
         <h2 class="text-3xl font-bold mb-6">The Sparse Reward Plateau</h2>
         <p class="serif">
-            Reinforcement learning (RL) for LLMs has been extremely effective for enhancing reasoning, especially for mathematics and coding 
-            (verifiable problems), but it has an important limitation: <em>models cannot learn from tasks that they cannot already solve to some extent</em>. 
-            RL relies on reinforcing correct outputs; if the model does not produce correct answers on a given dataset with some frequency, then the rewards that 
+            RL for LLMs has been extremely effective for enhancing reasoning on verifiable problems, but it has an important limitation: 
+            <em>models cannot learn from tasks that they cannot already solve</em>. 
+            RL relies on reinforcing correct outputs: if the model does not produce correct answers on a given dataset with some frequency, then the rewards that 
             it receives are too sparse to produce the needed gradient signal, and the learning curve plateaus.
         </p>
         
         <p class="serif">
-            We already know that curriculum learning (training on easy tasks first before progressing to harder ones) helps models generalize to levels of difficulty that 
-            they cannot initially, directly reach. Curriculum learning in RL is well studied but largely relies on already having human-curated, annotated data to draw upon.
+            Curriculum learning in RL is well studied; we know that training on easy tasks first helps models generalize to harder ones that 
+            they cannot directly reach initially. However, this largely relies on already having human-curated, annotated data to draw upon.
         </p>
         
         <p class="serif">
@@ -285,22 +285,25 @@
 
         <h3 class="text-2xl font-bold mb-6 pt-8">Grounded v. Intrinsic Rewards</h3>
         <p class="serif">
-            An important aspect of our setting is that we do not assume that we can automatically verify how
-             well-posed or correct a synthetic question-answer pair is (as one could do in code). Instead, we use a <strong>grounded reward</strong>, 
-             where we only reward a question-answer pair if training on it improves the student's performance on real problems from \(\mathcal{D}_{train}\). 
-             This acts as a black-box grounding signal that tethers the curriculum to real student learning progress, without actually showing the teacher sample problems or using any extra curated data.
+            We do not assume that we can automatically verify how well-posed or correct a synthetic question-answer pair is (as one could do in code). 
+            Instead, our <strong>grounded reward</strong> only rewards a question-answer pair if training on it improves student performance on real problems from \(\mathcal{D}_{train}\). 
+             This acts as a black-box grounding signal that tethers the curriculum to real student learning progress, without showing the teacher sample problems or using external curated data.
         </p>
         
         <p class="serif">
-            Another option is "data-free" <strong>intrinsic rewards</strong>, used by many self-play works that have similar asymmetric setups. One example is <em>learnability</em>, which rewards teacher models for generating problems that are not too difficult or too hard for the student (pass rate \(\approx 50 \%\)). However, since these rewards are essentially proxies for the target that we actually care about (student learning progress) they often risk diversity collapse, reward hacking, and drift to degenerate outputs. As a comparison point to grounded rewards used in SOAR, we also train teacher models with this intrinsic learnability reward (Intrinsic-T).
+            As a comparison point to grounded rewards, we also train teacher models with the "data-free" intrinsic <em>learnability</em> reward (Intrinsic-T), 
+            used by many self-play works with similar asymmetric setups. 
+            Learnability rewards teacher models for generating problems with a student pass rate of \(\approx 50 \%\). 
+            Past work has shown that since intrinsic rewards are proxies for the target that we actually care about (student learning progress), they can risk reward hacking and drift to degenerate outputs. 
+            
         </p>
         
         <hr class="section-divider">
         
         <h2 class="text-3xl font-bold mb-6 pt-8">Findings</h2>
         <p class="serif">
-            Our experiments use Llama-3.2-3B-Instruct. We extract difficult subsets of math reasoning datasets (MATH, HARP, and OlympiadBench) by filtering them 
-            for problems where the model achieved 0 successes in 128 attempts. We call these subsets "fail@128" datasets. 
+            Our experiments use Llama-3.2-3B-Instruct. We extract difficult subsets of math reasoning datasets (MATH, HARP, and OlympiadBench) by filtering 
+            for problems where the model achieves 0 successes in 128 attempts. We call these subsets "fail@128" datasets. 
             These fit the criteria of (1) having sparse and binary rewards, and (2) lacking a way to automatically verify question-answer pairs.
         </p>
         
@@ -374,7 +377,7 @@
                 
                 <p class="serif">First, <strong>grounded rewards sharpen the teacher's distribution of questions.</strong> 
                 Training students on questions generated from the base model leads to noisy outcomes, but the existence of successful runs tells us that useful questions are latent in the base model.
-                Grounded-T questions more reliably give a useful gradient signal..</p>
+                Grounded-T questions, on the other hand, more reliably give a useful gradient signal.</p>
                 <figure class="max-w-5xl mx-auto px-4 mb-6">
                     <div class="p-3 md:p-5">
                         <img src="figs/random_teacher.png" alt="SOAR Framework and Performance Lift" class="w-1/1 mx-auto h-auto rounded-lg">
@@ -383,6 +386,8 @@
                         </figcaption>
                     </div>
                 </figure>
+
+
 
             </p>
 
