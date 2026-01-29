@@ -159,7 +159,8 @@
         <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-xl mb-6">
             <h3 class="font-bold uppercase text-sm tracking-widest text-blue-700 mb-3">TLDR</h3>
             <p class="text-base text-blue-900 leading-relaxed">
-                We show that LLMs stuck on sparse-reward, difficult math problems can self-improve by generating a "stepping-stone" curriculum with grounded asymmetric meta-RL. This approach allows models to improve over reasoning plateaus without curated intermediate data or unstable intrinsic rewards.
+                We show that LLMs stuck on sparse-reward, difficult math problems can self-improve by learning to generate a "stepping-stone" curriculum with meta-RL. 
+                This allows models to improve over reasoning plateaus without curated intermediate data or unstable intrinsic rewards.
             </p>
         </div>
         
@@ -187,37 +188,41 @@
     <article class="max-w-4xl mx-auto px-6 prose mb-20 text-lg">
         <h2 class="text-3xl font-bold mb-6">The Sparse Reward Plateau</h2>
         <p class="serif">
-            RL for LLMs has been extremely effective for enhancing reasoning on verifiable problems, but it has an important limitation: 
+            RL for LLMs has been extremely effective, but it has an important limitation: 
             <em>models cannot learn from tasks that they cannot already solve to some extent</em>. 
             RL relies on reinforcing correct outputs: if the model does not produce correct answers on a given dataset with some frequency, then the rewards that 
             it receives are too sparse to produce the needed gradient signal, and the learning curve plateaus.
         </p>
         
         <p class="serif">
-            Curriculum learning in RL is well studied; we know that training on easy tasks first helps models generalize to harder ones that 
-            they cannot directly reach initially. However, this largely relies on already having human-curated, annotated data to draw upon.
+            Curriculum learning in RL is well studied; we know that training on easy tasks first helps models learn from harder ones that 
+            they cannot reach initially. But this relies on already having human-curated, annotated data.
         </p>
         
         <p class="serif">
-            In our new paper, we ask instead if <strong>models themselves can generate a stepping stone curriculum to break their own reasoning 
-                plateau.</strong> We show that using meta-RL, models can self-improve and get "unstuck" even on problems with zero empirical pass@128.
+            We ask instead if <strong>models themselves can generate a stepping stone curriculum to break their own reasoning 
+                plateau.</strong>
         </p>
-
+        <p class="serif">In our new paper, we show that with the right meta-RL recipe, models can self-improve and get "unstuck" even on problems with zero empirical pass@128!</p>
 
         <h3 class="text-2xl font-bold mb-6 pt-8">Hypothesis: Latent Pedagogical Ability</h3>
         <p class="serif">
-            We hypothesize that pretrained LLMs can be finetuned to directly generate an automated curriculum that makes hard problems learnable.
+            Our hypothesis is that <strong>pretrained LLMs can be finetuned to generate an automated curriculum that makes hard problems learnable, without actually being able to solve those hard problems</strong>.
+        </p>
+
+        <p class="serif">
+            Why might this be true?
         </p>
         
         <p class="serif">
-            <strong>Intuition:</strong> Even if a model is trapped in a sparse-reward basin, pretrained LLMs have encountered huge amounts of easy and intermediate problems 
-            already. Consider solving a difficult calculus problem. Even if a model does not directly generate the correct answer with repeated sampling, it likely <em>is</em> 
-            capable of producing simple chain rule exercises. In turn, these chain-rule exercises can act as stepping stones:
+            <strong>Intuition:</strong> Even if a model is trapped in a sparse-reward basin, pretrained LLMs have encountered many easy/intermediate problems 
+            already. Imagine solving a difficult calculus problem. Even if a model does not directly generate the correct answer with repeated sampling, it likely <em>is</em> 
+            capable of producing simple chain rule exercises. These easy exercises can help in two (related) ways:
         </p>
         
         <ul class="serif list-disc list-outside mb-6 space-y-2 ml-8">
-            <li class="pl-2"><strong>Gradient Signal:</strong> Training on these simpler exercises reinforces useful and relevant reasoning traces.</li>
-            <li class="pl-2"><strong>Learnability Frontier:</strong> Solving subtasks and receiving non-zero rewards pushes the student policy out of the plateau and 
+            <li class="pl-2"><strong>Gradient Signal:</strong> Training on these simpler exercises reinforces useful, relevant reasoning traces.</li>
+            <li class="pl-2"><strong>Learnability Frontier:</strong> Solving subtasks and receiving non-zero rewards pushes the student policy
                 into a region where the original, harder problem becomes more learnable. In this sense, easier problems are a way of "digging out" model capabilities that 
                 are inaccessible from direct sampling/training.</li>
         </ul>
@@ -250,7 +255,7 @@
 
         <h2 class="text-3xl font-bold mb-6 pt-8">Exploring Self-Generated Curricula with SOAR</h2>
         <p class="serif">
-            To explore if we can surface these pedagogical signals, we design a meta-RL framework: SOAR (<strong>S</strong>elf-<strong>O</strong>ptimization with <strong>A</strong>symmetric <strong>R</strong>L).
+            Our intuition is that a teacher model can learn what curriculum gives the best signal to a student for a class of hard problems, without actually being able to solve those hard problems. To explore if we can surface these pedagogical signals, we design a meta-RL framework: SOAR (<strong>S</strong>elf-<strong>O</strong>ptimization with <strong>A</strong>symmetric <strong>R</strong>L).
         </p>
         
         <p class="serif">
@@ -428,7 +433,7 @@
                 </figure>
                 
                 <p class="serif">Second, <strong>grounded teachers avoid instability and diversity collapse failure modes of instrinsic rewards.</strong> 
-                    If we sample questions from different <em>grounded-trained</em> and <em>intrinsic-trained</em> teacher seeds, and train students with them, we see that <em>grounded-trained</em> students from different teachers have similar learning curves.
+                    If we sample questions from different <em>grounded-trained</em> and <em>int rinsic-trained</em> teacher seeds, and train students with them, we see that <em>grounded-trained</em> students from different teachers have similar learning curves.
                     Different <em>intrinsic-trained</em> teacher seeds, however, lead to different curves, and can even lead to student collapse.
                 </p>
                 <figure class="max-w-5xl mx-auto px-4 mb-6">
